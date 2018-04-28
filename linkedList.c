@@ -7,13 +7,14 @@ check if linked list contains data. reverse linked list.
 #include "linkedList.h"
 
 int main(){
-    struct listNode **list = malloc(sizeof(Node)); 
+    struct listNode **list = calloc(sizeof(Node),5); 
 
-    push(list,newNode("apple"));
-    push(list,newNode("butter"));
+   
     push(list,newNode("eat"));
     push(list,newNode("cock"));
     push(list,newNode("dick"));
+    push(list,newNode("apple"));
+    push(list,newNode("butter"));
     
     printLinkedList(*list);
     printf("\n");
@@ -21,11 +22,12 @@ int main(){
     printLinkedList(*list);
 
     alphaSort(list, 5);
-
+       printf("\n");
+    printLinkedList(*list);
 
     deleteList(list);
     
-
+    
     return 0;
 }
 
@@ -34,8 +36,9 @@ void deleteList(Node **list) {
     Node *temp = NULL; 
     while( (*list) != NULL){
         temp = *list;
-        deleteNode(list);
-        *list = temp->next;
+        *list = (*list)->next;
+        free(temp);
+       
     }
     free(list);
 }
@@ -100,8 +103,9 @@ void printLinkedList(Node *list) {
 then reassigning the values in the linked list*/
 void alphaSort(Node **list,int numStrings){
     char **words = malloc(sizeof(char*) * numStrings);
+    Node *start = *list;
     int i=0;
-    if(list == NULL){
+    if(*list == NULL || list == NULL){
         return;
     }
 
@@ -114,14 +118,20 @@ void alphaSort(Node **list,int numStrings){
     }
 
     qsort(words,numStrings,sizeof(char*),cmp);
+   
+    *list = start;
+    i=0;
 
-    for(i=0; i<numStrings;i++){
-        printf("%s \n",words[i]);
+    /*assigns value alphabetised words to linkedlist*/
+    while(*list){
         
+        (*list)->data =words[i] ;
+        (*list) = (*list)->next;
+        i++;    
     }
-   free(words);
-    
 
+    *list = start;
+    free(words);
 }
 
 /*moves pointers around to sort them alphabetically*/

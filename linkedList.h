@@ -1,9 +1,3 @@
-
-
-/*****
-* Standard Libraries
-*****/
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -26,10 +20,6 @@ struct listNode {
 * Function Prototypes for linkedList.c
 *****/
 
-
-/***** Mandatory Functions *****/
-
-
 /* Mandatory: Frees all allocated memory associated with the list pointers iteratively */
 void deleteList(Node **list);
 
@@ -50,6 +40,9 @@ void reverseOrder(Node **list);
 
 /* Optional: Prints an entire linked list. Nodes are printed from first to last. */
 void printLinkedList(Node *linkedList);
+
+/*insert after*/
+void insertAfter(Node **list, char* dataSearch,Node *toAdd);
 
 /*Alphabetise data. but does not move pointers, just reassigns values for data*/
 void alphaSort(Node **list,int numStrings);

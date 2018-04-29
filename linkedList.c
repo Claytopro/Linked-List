@@ -7,7 +7,7 @@ check if linked list contains data. reverse linked list.
 #include "linkedList.h"
 
 int main(){
-    struct listNode **list = calloc(sizeof(Node),5); 
+    struct listNode **list = calloc(sizeof(Node),6); 
 
    
     push(list,newNode("eat"));
@@ -17,14 +17,25 @@ int main(){
     push(list,newNode("butter"));
     
     printLinkedList(*list);
-    printf("\n");
+    printf("reversed\n\n");
     reverseOrder(list);
     printLinkedList(*list);
 
-    alphaSort(list, 5);
-       printf("\n");
+    alphaSort(list,5);
+
+    printf("sorted\n\n");
+    printLinkedList(*list);
+    
+    printf("insert after\n\n");
+    insertAfter(list,"dick",newNode("hats"));
+    
     printLinkedList(*list);
 
+    alphaSort(list,6);
+
+    printf("sorted\n\n");
+    printLinkedList(*list);
+   
     deleteList(list);
     
     
@@ -83,8 +94,8 @@ void reverseOrder(Node **list) {
     while(*list){
         temp = pop(list);
         push(reverseList,temp);
-
     }
+
     /*set pointer equal to reversed list pointer, list is null currently*/
     *list = *reverseList;
     free(reverseList);
@@ -94,12 +105,32 @@ void reverseOrder(Node **list) {
 void printLinkedList(Node *list) {
 
  while(list != NULL){
-        /*TODO %p expects pointer*/
+        
         printf("holds %s\n",list->data);
         list = list->next;
     }
 }
-/*sort words alpha betically by copying them to a list of words, sorting them.
+
+void insertAfter(Node **list, char* dataSearch,Node *toAdd){
+       Node *start = NULL;
+        if(list == NULL){
+            return;
+        }
+
+        start = *list;
+
+        while(*list){
+            if(!strcmp((*list)->data,dataSearch)){
+                toAdd->next = (*list)->next;
+                (*list)->next = toAdd;
+                (*list) = (*list)->next;  
+            }
+            (*list) = (*list)->next;
+        }
+     *list = start;
+}
+
+/*sort words alphabetically by copying them to a list of words, sorting them.
 then reassigning the values in the linked list*/
 void alphaSort(Node **list,int numStrings){
     char **words = malloc(sizeof(char*) * numStrings);
@@ -132,9 +163,11 @@ void alphaSort(Node **list,int numStrings){
 
     *list = start;
     free(words);
+   
 }
 
-/*moves pointers around to sort them alphabetically*/
+/*moves pointers around to sort them alphabetically
+better for struct that hold more data (maybe?)*/
 void sortLinks(Node **list){
 
 

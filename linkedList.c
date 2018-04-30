@@ -9,8 +9,28 @@ check if linked list contains data. reverse linked list.
 int main(){
     struct listNode **list = calloc(sizeof(Node),6); 
 
-   
+    /*test all with nothing in list*/
+    printLinkedList(*list);
+    
+    reverseOrder(list);
+    alphaSort(list,5);
+    insertAfter(list,"dick",newNode("hats"));
+    deleteList(list);
+
+    list = calloc(sizeof(Node),6);
+    
     push(list,newNode("eat"));
+    /*test with only 1 entry*/
+
+    reverseOrder(list);
+    alphaSort(list,1);
+    insertAfter(list,"eat",newNode("hatts"));
+    printf("list before deletions\n");
+    printLinkedList(*list);
+    printf("\n");
+    deleteList(list);
+
+    list = calloc(sizeof(Node),6);
     push(list,newNode("cock"));
     push(list,newNode("dick"));
     push(list,newNode("apple"));
@@ -21,28 +41,22 @@ int main(){
     reverseOrder(list);
     printLinkedList(*list);
 
-    alphaSort(list,5);
-
+    alphaSort(list,4);
     printf("sorted\n\n");
     printLinkedList(*list);
-    
     printf("insert after\n\n");
     insertAfter(list,"dick",newNode("hats"));
-    
     printLinkedList(*list);
-
-    alphaSort(list,6);
-
+    alphaSort(list,5);
     printf("sorted\n\n");
     printLinkedList(*list);
-   
     deleteList(list);
     
     
     return 0;
 }
 
-/* Mandatory: Frees all allocated memory associated with the list pointers iteratively */
+/*Frees all allocated memory associated with the list pointers iteratively */
 void deleteList(Node **list) {
     Node *temp = NULL; 
     while( (*list) != NULL){
@@ -54,58 +68,55 @@ void deleteList(Node **list) {
     free(list);
 }
 
-/* Mandatory: Frees all allocated memory associated with a single node */
+/*Frees all allocated memory associated with a single node */
 void deleteNode(Node **toDelete){
     free((*toDelete));
 }
 
-/* Mandatory: Allocates memory for a new string and returns a pointer to the memory. */
+/*Allocates memory for a new string and returns a pointer to the memory. */
 Node *newNode(char *string) {
         struct listNode *new = malloc(sizeof(Node));
         new->data = string;
+        new->next = NULL;
         return new;
 }
 
-/* Mandatory: Removes a node from the front of a list */
+/*Removes a node from the front of a list */
 Node *pop(Node **list) {
         struct listNode *temp = *list; 
         *list = temp->next;
+        temp->next = NULL;
     return temp;
 }
 
-/* Mandatory: Adds a node to the front of a list */
+/*Adds a node to the front of a list */
 void push(Node **list, Node *toAdd) {
         toAdd->next = *list; 
         *list = toAdd;
 }
 
-/* Mandatory: Return a list of pointers in order */
+/*Return a list of pointers in order */
 void reverseOrder(Node **list) {
     /* Hint: your solution should not need to allocate memory */
     /* remember push and pop... */
-    
-    Node **reverseList = NULL;
-    Node *temp =NULL;
-    reverseList = malloc(sizeof(Node));
-    if(list == NULL){
+    Node *temp = NULL;
+    Node *tempT =NULL;
+    if(list == NULL || (*list)==NULL){
         return;
     }
- 
+    temp = pop(list);
     while(*list){
-        temp = pop(list);
-        push(reverseList,temp);
+        tempT =pop(list);
+        tempT->next = temp;
+        temp = tempT;
     }
-
-    /*set pointer equal to reversed list pointer, list is null currently*/
-    *list = *reverseList;
-    free(reverseList);
+    *list = temp;
 }
 
 /* Optional: Prints an entire linked list. Nodes are printed from first to last. */
 void printLinkedList(Node *list) {
-
- while(list != NULL){
-        
+   
+    while(list != NULL){    
         printf("holds %s\n",list->data);
         list = list->next;
     }
@@ -113,12 +124,14 @@ void printLinkedList(Node *list) {
 
 void insertAfter(Node **list, char* dataSearch,Node *toAdd){
        Node *start = NULL;
-        if(list == NULL){
+
+        if(list == NULL || *list == NULL){  
+            free(toAdd);
             return;
         }
 
         start = *list;
-
+        
         while(*list){
             if(!strcmp((*list)->data,dataSearch)){
                 toAdd->next = (*list)->next;
@@ -137,6 +150,7 @@ void alphaSort(Node **list,int numStrings){
     Node *start = *list;
     int i=0;
     if(*list == NULL || list == NULL){
+        free(words);
         return;
     }
 
@@ -148,14 +162,20 @@ void alphaSort(Node **list,int numStrings){
         
     }
 
+    
+    if(i == 1){
+        *list = start;
+        free(words);
+        return;
+    }
+
     qsort(words,numStrings,sizeof(char*),cmp);
-   
+  
     *list = start;
     i=0;
 
     /*assigns value alphabetised words to linkedlist*/
     while(*list){
-        
         (*list)->data =words[i] ;
         (*list) = (*list)->next;
         i++;    
